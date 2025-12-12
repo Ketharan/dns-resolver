@@ -1,0 +1,67 @@
+openapi: 3.0.3
+info:
+  title: Go NSLookup Service
+  version: 1.0.0
+  description: |
+    A simple service that accepts a domain via POST and returns resolved IPs.
+servers:
+  - url: http://localhost:8080
+paths:
+  /lookup:
+    post:
+      summary: Resolve domain to IP addresses
+      operationId: lookupDomain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - domain
+              properties:
+                domain:
+                  type: string
+                  example: example.com
+      responses:
+        '200':
+          description: Lookup response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  domain:
+                    type: string
+                    example: example.com
+                  ips:
+                    type: array
+                    items:
+                      type: string
+                    example: ["93.184.216.34"]
+                  error:
+                    type: string
+                    nullable: true
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: invalid request payload
+
+  /healthz:
+    get:
+      summary: Health check endpoint
+      operationId: health
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ok
