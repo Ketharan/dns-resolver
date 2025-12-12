@@ -231,3 +231,14 @@ Security tips:
 - Validate domain names more strictly for production.
 - If you must run system 'nslookup' binary for parity, you'd need to include it in the image and exec it; current implementation uses Go's resolver which mirrors system resolver behaviour.
 */
+
+
+func writeJSON(w http.ResponseWriter, status int, v interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	enc := json.NewEncoder(w)
+	enc.SetEscapeHTML(false)
+	if err := enc.Encode(v); err != nil {
+		log.Printf("failed to write json response: %v", err)
+	}
+}
